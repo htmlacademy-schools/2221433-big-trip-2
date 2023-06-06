@@ -40,9 +40,9 @@ const createPhotosListTemplate = (pictures) => `<div class="event__photos-contai
     </div>
     </div>`;
 
-const createTypeListTemplate = (allOffers) => allOffers
-  .map(({ type }) => `<div class="event__type-item">
-  <input id="event-type-${type}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}">
+const createTypeListTemplate = (allOffers, currentType) => allOffers
+  .map(({type}) => `<div class="event__type-item">
+  <input id="event-type-${type}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}" ${type === currentType ? 'checked' : ''}>
   <label class="event__type-label  event__type-label--${type}" for="event-type-${type}">${capitalizeFirstLetter(type)}</label>
 </div>`).join('\n');
 
@@ -69,7 +69,7 @@ const createPointEditTemplate = (point, allOffers, allDestinations) => {
           <div class="event__type-list">
             <fieldset class="event__type-group">
               <legend class="visually-hidden">Event type</legend>
-              ${createTypeListTemplate(allOffers)}
+              ${createTypeListTemplate(allOffers, type)}
             </fieldset>
           </div>
         </div>
@@ -109,10 +109,10 @@ const createPointEditTemplate = (point, allOffers, allDestinations) => {
           ${createAvailableOptionsTemplate(offers, allOffersForType)}
           </div>
         </section>
-        <section class="event__section  event__section--destination ${selectedDestinationData.description !== '' ? 'visually-hidden' : ''}">
+        <section class="event__section  event__section--destination ${selectedDestinationData.description === '' ? 'visually-hidden' : ''}">
           <h3 class="event__section-title  event__section-title--destination">Destination</h3>
           <p class="event__destination-description">${selectedDestinationData.description}</p>
-          ${(!selectedDestinationData.pictures) ? '' : createPhotosListTemplate(selectedDestinationData.pictures)}
+          ${selectedDestinationData.pictures ? createPhotosListTemplate(selectedDestinationData.pictures) : ''}
         </section>
       </section>
     </form>
