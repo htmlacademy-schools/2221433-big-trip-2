@@ -1,5 +1,5 @@
 import { render, replace, remove } from '../framework/render.js';
-import PointEditView from '../view/edit-point-view.js';
+import PointEditView from '../view/point-edit-view.js';
 import PointView from '../view/point-view.js';
 import { UserAction, UpdateType } from '../const.js';
 
@@ -37,11 +37,11 @@ export default class PointPresenter {
     this.#pointComponent = new PointView(this.#point, this.#offers, this.#destinations);
     this.#pointEditComponent = new PointEditView(this.#point, this.#offers, this.#destinations);
 
-    this.#pointComponent.setEditRollUpHandler(this.#handleEditClick);
-    this.#pointEditComponent.setPointRollUpHandler(this.#handlePointClick);
-    this.#pointEditComponent.setPointSaveHandler(this.#handlePointSave);
-    this.#pointEditComponent.setDeleteClickHandler(this.#handlePointDelete);
-    this.#pointComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
+    this.#pointComponent.setEditRollUpHandler(this.#editClickHandler);
+    this.#pointEditComponent.setPointRollUpHandler(this.#pointClickHandler);
+    this.#pointEditComponent.setPointSaveHandler(this.#pointSaveHandler);
+    this.#pointEditComponent.setDeleteClickHandler(this.#pointDeleteHandler);
+    this.#pointComponent.setFavoriteClickHandler(this.#favoriteClickHandler);
 
     if ((previousPointComponent === null) || (previousPointEditComponent === null)) {
       render(this.#pointComponent, this.#pointListContainer);
@@ -134,7 +134,7 @@ export default class PointPresenter {
     }
   };
 
-  #handleFavoriteClick = () => {
+  #favoriteClickHandler = () => {
     this.#changeData(
       UserAction.UPDATE_POINT,
       UpdateType.MINOR,
@@ -142,19 +142,18 @@ export default class PointPresenter {
     );
   };
 
-  #handleEditClick = () => {
+  #editClickHandler = () => {
     this.#replacePointToEditForm();
   };
 
-  #handlePointClick = () => {
+  #pointClickHandler = () => {
     if (this.#mode !== Mode.DEFAULT) {
       this.#pointEditComponent.reset(this.#point, this.#offers, this.#destinations);
       this.#replaceEditFormToPoint();
     }
   };
 
-  #handlePointSave = (update) => {
-
+  #pointSaveHandler = (update) => {
     this.#changeData(
       UserAction.UPDATE_POINT,
       UpdateType.MINOR,
@@ -162,7 +161,7 @@ export default class PointPresenter {
     );
   };
 
-  #handlePointDelete = (point) => {
+  #pointDeleteHandler = (point) => {
     this.#changeData(
       UserAction.DELETE_POINT,
       UpdateType.MINOR,

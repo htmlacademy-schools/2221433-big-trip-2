@@ -34,15 +34,15 @@ const getSelectedDestinationData = (destinationName, allDestinations) => {
   return selectedDestinationData;
 };
 
-const createPhotosListTemplate = (pictures) => (`<div class="event__photos-container">
+const createPhotosListTemplate = (pictures) => `<div class="event__photos-container">
     <div class="event__photos-tape">
     ${pictures.map((picture) => `<img class="event__photo" src="${picture.src}" alt="Event photo">`).join('\n')}
     </div>
-    </div>`
-);
+    </div>`;
 
-const createTypeListTemplate = (allOffers) => allOffers.map(({ type }) => `<div class="event__type-item">
-  <input id="event-type-${type}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}">
+const createTypeListTemplate = (allOffers, currentType) => allOffers
+  .map(({type}) => `<div class="event__type-item">
+  <input id="event-type-${type}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}" ${type === currentType ? 'checked' : ''}>
   <label class="event__type-label  event__type-label--${type}" for="event-type-${type}">${capitalizeFirstLetter(type)}</label>
 </div>`).join('\n');
 
@@ -69,7 +69,7 @@ const createPointEditTemplate = (point, allOffers, allDestinations) => {
           <div class="event__type-list">
             <fieldset class="event__type-group">
               <legend class="visually-hidden">Event type</legend>
-              ${createTypeListTemplate(allOffers)}
+              ${createTypeListTemplate(allOffers, type)}
             </fieldset>
           </div>
         </div>
@@ -96,7 +96,7 @@ const createPointEditTemplate = (point, allOffers, allDestinations) => {
           </label>
           <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${basePrice}" ${isDisabled ? 'disabled' : ''}>
         </div>
-        <button class="event__save-btn  btn  btn--blue" type="submit" ${isSubmitDisabledByDate(startDate, endDate) ? '' : 'disabled'} ${isSubmitDisabledByPrice(basePrice) ? '' : 'disabled'} ${isSubmitDisabledByDestinationName(selectedDestinationName, allDestinations) ? '' : 'disabled'} ${isDisabled ? 'disabled' : ''}>${isSaving ? 'Saving...' : 'Save'}</button>
+        <button class="event__save-btn  btn  btn--blue" type="submit" ${isSubmitDisabledByDate(startDate, endDate) ? '' : 'disabled'} ${isSubmitDisabledByPrice(basePrice) ? '' : 'disabled'} ${isSubmitDisabledByDestinationName(selectedDestinationName, allDestinations) ? '' : 'disabled'} ${isDisabled ? 'disabled' : ''}> ${isSaving ? 'Saving...' : 'Save'}</button>
         <button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>${!point.id ? 'Cancel' : deletingPoint} </button>
         <button class="event__rollup-btn" type="button" ${isDisabled ? 'disabled' : ''}>
           <span class="visually-hidden">Open event</span>
@@ -109,10 +109,10 @@ const createPointEditTemplate = (point, allOffers, allDestinations) => {
           ${createAvailableOptionsTemplate(offers, allOffersForType)}
           </div>
         </section>
-        <section class="event__section  event__section--destination">
+        <section class="event__section  event__section--destination ${selectedDestinationData.description === '' ? 'visually-hidden' : ''}">
           <h3 class="event__section-title  event__section-title--destination">Destination</h3>
           <p class="event__destination-description">${selectedDestinationData.description}</p>
-          ${(!selectedDestinationData.pictures) ? '' : createPhotosListTemplate(selectedDestinationData.pictures)}
+          ${selectedDestinationData.pictures ? createPhotosListTemplate(selectedDestinationData.pictures) : ''}
         </section>
       </section>
     </form>
