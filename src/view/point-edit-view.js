@@ -279,7 +279,7 @@ export default class PointEditView extends AbstractStatefulView {
       selectedOffers.splice(selectedOffers.indexOf(clickedOfferId), 1);
     }
 
-    this.updateElement({
+    this._setState({
       offers: selectedOffers,
     });
   };
@@ -287,19 +287,19 @@ export default class PointEditView extends AbstractStatefulView {
   #priceToggleHandler = (evt) => {
     evt.preventDefault();
 
-    this.updateElement({
+    this._setState({
       basePrice: parseInt(evt.target.value, 10)
     });
   };
 
   #startDateChangeHandler = ([userStartDate]) => {
-    this.updateElement({
+    this._setState({
       startDate: dayjs(userStartDate),
     });
   };
 
   #endDateChangeHandler = ([userEndDate]) => {
-    this.updateElement({
+    this._setState({
       endDate: dayjs(userEndDate),
     });
   };
